@@ -9,7 +9,7 @@ pipeline {
     copyArtifactPermission('aur-packages/aur-update');
   }
 
-  stages {
+  parallel {
     stage('lemonbar-xft-git') {
       agent {
         label 'archlinux-docker'
@@ -36,16 +36,17 @@ pipeline {
       }
     }
 
-    stage('artifacts') {
-      steps {
-        archiveArtifacts(artifacts: '**/*.pkg.tar.zst', onlyIfSuccessful: true, fingerprint: true)
-      }
-    }
+  }
 
-    stage('trigger repo update') {
-      steps {
-        build job: 'aur-packages/aur-update', parameters: [[$class: 'StringParameterValue', name: 'UPSTREAM_PROJECT', value: 'packages/main']]
-      }
+  stage('artifacts') {
+    steps {
+      archiveArtifacts(artifacts: '**/*.pkg.tar.zst', onlyIfSuccessful: true, fingerprint: true)
+    }
+  }
+
+  stage('trigger repo update') {
+    steps {
+      build job: 'aur-packages/aur-update', parameters: [[$class: 'StringParameterValue', name: 'UPSTREAM_PROJECT', value: 'packages/main']]
     }
   }
 }
