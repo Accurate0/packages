@@ -4,7 +4,8 @@ def packages = [
 ]
 def jobs = [:]
 
-for (package in packages) {
+for (int i = 0; i < packages.size(); i++) {
+  String package = packages[i]
   jobs["${package}"] = {
     stage("${package}") {
       when { changeset "${package}/*"}
