@@ -10,38 +10,25 @@ pipeline {
     }
   }
   stages {
-    script {
-      packages.each { String package ->
-        stage(package) {
-          steps {
-            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-              sh '''
-              cd ${package} && makepkg --nosign --syncdeps --noconfirm
-              '''
-            }
-          }
+    stage('lemonbar-xft-git') {
+      steps {
+        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+          sh '''
+          cd lemonbar-xft-git && makepkg --nosign --syncdeps --noconfirm
+          '''
         }
       }
     }
-    // stage('lemonbar-xft-git') {
-    //   steps {
-    //     catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-    //       sh '''
-    //       cd lemonbar-xft-git && makepkg --nosign --syncdeps --noconfirm
-    //       '''
-    //     }
-    //   }
-    // }
 
-    // stage('maim') {
-    //   steps {
-    //     catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-    //       sh '''
-    //       cd maim && makepkg --nosign --syncdeps --noconfirm
-    //       '''
-    //     }
-    //   }
-    // }
+    stage('maim') {
+      steps {
+        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+          sh '''
+          cd maim && makepkg --nosign --syncdeps --noconfirm
+          '''
+        }
+      }
+    }
 
     stage('archive') {
       steps {
@@ -50,11 +37,7 @@ pipeline {
     }
 
     stage('trigger repo update') {
-      script {
-        packages.each { String package ->
-          build job: 'aur-packages/aur-update', parameters: [[$class: 'StringParameterValue', name: 'UPSTREAM_PROJECT', value: package]]
-        }
-      }
+      build job: 'aur-packages/aur-update', parameters: [[$class: 'StringParameterValue', name: 'UPSTREAM_PROJECT', value: 'packages']]
     }
   }
 }
