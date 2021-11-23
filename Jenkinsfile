@@ -35,7 +35,7 @@ pipeline {
       }
     }
 
-    stage('archive') {
+    stage('artifacts') {
       steps {
         archiveArtifacts(artifacts: '**/*.pkg.tar.zst', onlyIfSuccessful: true, fingerprint: true)
       }
