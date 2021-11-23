@@ -15,16 +15,15 @@ pipeline {
       steps {
         script {
           for (int i = 0; i < packages.size(); i++) {
-            def package = packages[i]
-            jobs["${package}"] = {
-              stage("${package}") {
-                when { changeset "${package}/*"}
+            jobs["${packages[i]}"] = {
+              stage("${packages[i]}") {
+                when { changeset "${packages[i]}/*"}
                 agent {
                   label 'archlinux-docker'
                 }
                 steps {
                   catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                      sh "cd ${package} && makepkg --nosign --syncdeps --noconfirm"
+                      sh "cd ${packages[i]} && makepkg --nosign --syncdeps --noconfirm"
                   }
                   archiveArtifacts(artifacts: '**/*.pkg.tar.zst', onlyIfSuccessful: true, fingerprint: true)
                 }
