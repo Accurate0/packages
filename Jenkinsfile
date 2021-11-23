@@ -8,6 +8,9 @@ pipeline {
     node {
       label 'archlinux-docker'
     }
+    options {
+        copyArtifactPermission('aur-update');
+    }
   }
   stages {
     stage('lemonbar-xft-git') {
