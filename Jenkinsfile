@@ -11,7 +11,7 @@ pipeline {
   }
 
   options {
-      copyArtifactPermission('aur-packages/aur-update');
+    copyArtifactPermission('aur-packages/aur-update');
   }
 
   stages {
@@ -43,7 +43,7 @@ pipeline {
 
     stage('trigger repo update') {
       steps {
-        build job: 'aur-packages/aur-update', parameters: [[$class: 'StringParameterValue', name: 'UPSTREAM_PROJECT', value: 'packages']]
+        build job: 'aur-packages/aur-update', parameters: [[$class: 'StringParameterValue', name: 'UPSTREAM_PROJECT', value: 'packages/main']]
       }
     }
   }
