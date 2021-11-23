@@ -11,9 +11,9 @@ for (package in packges) {
       agent {
         label 'archlinux-docker'
       }
-    steps {
-      catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-          sh "cd ${package} && makepkg --nosign --syncdeps --noconfirm"
+      steps {
+        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+            sh "cd ${package} && makepkg --nosign --syncdeps --noconfirm"
         }
         archiveArtifacts(artifacts: '**/*.pkg.tar.zst', onlyIfSuccessful: true, fingerprint: true)
       }
