@@ -4,31 +4,24 @@ pipeline {
       label 'archlinux-docker'
     }
   }
-  options {
-    newContainerPerStage()
-  }
   stages {
     stage('build') {
-      node('archlinux-docker') {
-        stage('lemonbar-xft-git') {
-          steps {
-            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-              sh '''
-              cd lemonbar-xft-git && makepkg --nosign --syncdeps --noconfirm
-              '''
-            }
+      stage('lemonbar-xft-git') {
+        steps {
+          catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+            sh '''
+            cd lemonbar-xft-git && makepkg --nosign --syncdeps --noconfirm
+            '''
           }
         }
       }
 
-      node('archlinux-docker') {
-        stage('maim') {
-          steps {
-            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-              sh '''
-              cd maim && makepkg --nosign --syncdeps --noconfirm
-              '''
-            }
+      stage('maim') {
+        steps {
+          catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+            sh '''
+            cd maim && makepkg --nosign --syncdeps --noconfirm
+            '''
           }
         }
       }
