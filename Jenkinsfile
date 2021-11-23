@@ -4,8 +4,8 @@ pipeline {
       image 'localhost:5000/archbuild'
       reuseNode false
     }
-  }
 
+  }
   stages {
     stage('sync') {
       steps {
@@ -17,13 +17,19 @@ pipeline {
       parallel {
         stage('lemonbar-xft-git') {
           steps {
-            sh 'cd lemonbar-xft-git && makepkg --nosign --syncdeps --noconfirm'
+            dockerNode(image: 'localhost:5000/archbuild') {
+              sh 'echo test'
+            }
+
           }
         }
 
         stage('maim') {
           steps {
-            sh 'cd maim && makepkg --nosign --syncdeps --noconfirm'
+            dockerNode(image: 'localhost:5000/archbuild') {
+              sh 'echo test2'
+            }
+
           }
         }
 
