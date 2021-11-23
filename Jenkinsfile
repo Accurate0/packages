@@ -4,18 +4,16 @@ def packages = [
 ]
 
 pipeline {
-  agent {
-    node {
-      label 'archlinux-docker'
-    }
-  }
-
+  agent none
   options {
     copyArtifactPermission('aur-packages/aur-update');
   }
 
   stages {
     stage('lemonbar-xft-git') {
+      agent {
+        label 'archlinux-docker'
+      }
       steps {
         catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
           sh '''
@@ -26,6 +24,9 @@ pipeline {
     }
 
     stage('maim') {
+      agent {
+        label 'archlinux-docker'
+      }
       steps {
         catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
           sh '''
