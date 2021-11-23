@@ -1,5 +1,10 @@
 pipeline {
-  agent any
+  agent {
+    node {
+      label 'archlinux-docker'
+    }
+
+  }
   stages {
     stage('lemonbar-xft-git') {
       parallel {
