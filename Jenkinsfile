@@ -9,33 +9,34 @@ pipeline {
     copyArtifactPermission('aur-packages/aur-update');
   }
 
-  parallel {
-    stage('lemonbar-xft-git') {
-      agent {
-        label 'archlinux-docker'
+  stage('build packages') {
+    parallel {
+      stage('lemonbar-xft-git') {
+        agent {
+          label 'archlinux-docker'
+        }
+        steps {
+          catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+            sh '''
+            cd lemonbar-xft-git && makepkg --nosign --syncdeps --noconfirm
+            '''
+          }
+        }
       }
-      steps {
-        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-          sh '''
-          cd lemonbar-xft-git && makepkg --nosign --syncdeps --noconfirm
-          '''
+
+      stage('maim') {
+        agent {
+          label 'archlinux-docker'
+        }
+        steps {
+          catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+            sh '''
+            cd maim && makepkg --nosign --syncdeps --noconfirm
+            '''
+          }
         }
       }
     }
-
-    stage('maim') {
-      agent {
-        label 'archlinux-docker'
-      }
-      steps {
-        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-          sh '''
-          cd maim && makepkg --nosign --syncdeps --noconfirm
-          '''
-        }
-      }
-    }
-
   }
 
   stage('artifacts') {
