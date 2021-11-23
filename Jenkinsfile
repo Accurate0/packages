@@ -11,7 +11,7 @@ pipeline {
   }
 
   options {
-      copyArtifactPermission('aur-update');
+      copyArtifactPermission('aur-packages/aur-update');
   }
 
   stages {
