@@ -6,28 +6,32 @@ pipeline {
 
   }
   stages {
-    stage('builds') {
+    stage('sync') {
+      steps {
+        sh 'sudo pacman -Syu --noconfirm'
+      }
+    }
+
+    stage('build') {
       parallel {
         stage('lemonbar-xft-git') {
           steps {
-            sh '''sudo pacman -Syu --noconfirm
-BUILDDIR=/tmp makepkg -p lemonbar-xft-git/PKGBUILD'''
+            sh 'cd lemonbar-xft-git && makepkg --nosign --syncdeps --noconfirm'
           }
         }
 
         stage('maim') {
           steps {
-            sh '''sudo pacman -Syu --noconfirm
-BUILDDIR=/tmp makepkg -p maim/PKGBUILD'''
+            sh 'cd maim && makepkg --nosign --syncdeps --noconfirm'
           }
         }
 
       }
     }
 
-    stage('artifacts') {
+    stage('archive') {
       steps {
-        archiveArtifacts(artifacts: '*.pkg.tar.zst', fingerprint: true, onlyIfSuccessful: true)
+        archiveArtifacts(artifacts: '*.pkg.tar.zst', onlyIfSuccessful: true, fingerprint: true)
       }
     }
 
