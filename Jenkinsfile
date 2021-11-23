@@ -6,7 +6,7 @@ pipeline {
 
   }
   stages {
-    stage('lemonbar-xft-git') {
+    stage('builds') {
       parallel {
         stage('lemonbar-xft-git') {
           steps {
