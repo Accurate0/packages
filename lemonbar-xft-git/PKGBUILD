@@ -1,4 +1,4 @@
-pkgname=lemonbar-git
+pkgname=lemonbar-xft-git
 _pkgname=lemonbar
 pkgver=v1.4.r7.g313481e
 pkgrel=1
