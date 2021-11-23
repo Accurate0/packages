@@ -37,7 +37,9 @@ pipeline {
     }
 
     stage('trigger repo update') {
-      build job: 'aur-packages/aur-update', parameters: [[$class: 'StringParameterValue', name: 'UPSTREAM_PROJECT', value: 'packages']]
+      steps {
+        build job: 'aur-packages/aur-update', parameters: [[$class: 'StringParameterValue', name: 'UPSTREAM_PROJECT', value: 'packages']]
+      }
     }
   }
 }
