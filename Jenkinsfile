@@ -9,45 +9,47 @@ pipeline {
     copyArtifactPermission('aur-packages/aur-update');
   }
 
-  stage('build packages') {
-    parallel {
-      stage('lemonbar-xft-git') {
-        agent {
-          label 'archlinux-docker'
-        }
-        steps {
-          catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-            sh '''
-            cd lemonbar-xft-git && makepkg --nosign --syncdeps --noconfirm
-            '''
+  stages {
+    stage('build packages') {
+      parallel {
+        stage('lemonbar-xft-git') {
+          agent {
+            label 'archlinux-docker'
+          }
+          steps {
+            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+              sh '''
+              cd lemonbar-xft-git && makepkg --nosign --syncdeps --noconfirm
+              '''
+            }
           }
         }
-      }
 
-      stage('maim') {
-        agent {
-          label 'archlinux-docker'
-        }
-        steps {
-          catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-            sh '''
-            cd maim && makepkg --nosign --syncdeps --noconfirm
-            '''
+        stage('maim') {
+          agent {
+            label 'archlinux-docker'
+          }
+          steps {
+            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+              sh '''
+              cd maim && makepkg --nosign --syncdeps --noconfirm
+              '''
+            }
           }
         }
       }
     }
-  }
 
-  stage('artifacts') {
-    steps {
-      archiveArtifacts(artifacts: '**/*.pkg.tar.zst', onlyIfSuccessful: true, fingerprint: true)
+    stage('artifacts') {
+      steps {
+        archiveArtifacts(artifacts: '**/*.pkg.tar.zst', onlyIfSuccessful: true, fingerprint: true)
+      }
     }
-  }
 
-  stage('trigger repo update') {
-    steps {
-      build job: 'aur-packages/aur-update', parameters: [[$class: 'StringParameterValue', name: 'UPSTREAM_PROJECT', value: 'packages/main']]
+    stage('trigger repo update') {
+      steps {
+        build job: 'aur-packages/aur-update', parameters: [[$class: 'StringParameterValue', name: 'UPSTREAM_PROJECT', value: 'packages/main']]
+      }
     }
   }
 }
