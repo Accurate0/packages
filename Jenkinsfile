@@ -1,5 +1,5 @@
 pipeline {
-  agent { dockerfile true }
+  agent { docker 'localhost:5000/archbuild' }
   options {
     newContainerPerStage()
   }
