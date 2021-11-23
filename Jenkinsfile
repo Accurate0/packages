@@ -1,9 +1,3 @@
-def packages = [
-  "lemonbar-xft-git",
-  "maim",
-]
-def jobs = [:]
-
 pipeline {
   agent none
   options {
@@ -12,25 +6,35 @@ pipeline {
 
   stages {
     stage('build packages') {
-      steps {
-        script {
-          for (int i = 0; i < packages.size(); i++) {
-            jobs["${packages[i]}"] = {
-              stage("${packages[i]}") {
-                when { changeset "${packages[i]}/*"}
-                agent {
-                  label 'archlinux-docker'
-                }
-                steps {
-                  catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                      sh "cd ${packages[i]} && makepkg --nosign --syncdeps --noconfirm"
-                  }
-                  archiveArtifacts(artifacts: '**/*.pkg.tar.zst', onlyIfSuccessful: true, fingerprint: true)
-                }
-              }
-            }
+      parallel {
+        stage('lemonbar-xft-git') {
+          when { changeset "lemonbar-xft-git/*"}
+          agent {
+            label 'archlinux-docker'
           }
-          parallel jobs
+          steps {
+            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+              sh '''
+              cd lemonbar-xft-git && makepkg --nosign --syncdeps --noconfirm
+              '''
+            }
+            archiveArtifacts(artifacts: '**/*.pkg.tar.zst', onlyIfSuccessful: true, fingerprint: true)
+          }
+        }
+
+        stage('maim') {
+          when { changeset "maim/*"}
+          agent {
+            label 'archlinux-docker'
+          }
+          steps {
+            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+              sh '''
+              cd maim && makepkg --nosign --syncdeps --noconfirm
+              '''
+            }
+            archiveArtifacts(artifacts: '**/*.pkg.tar.zst', onlyIfSuccessful: true, fingerprint: true)
+          }
         }
       }
     }
