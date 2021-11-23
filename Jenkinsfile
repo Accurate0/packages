@@ -32,7 +32,7 @@ pipeline {
 
     stage('archive') {
       steps {
-        archiveArtifacts(artifacts: '*.pkg.tar.zst', onlyIfSuccessful: true, fingerprint: true)
+        archiveArtifacts(artifacts: '**/*.pkg.tar.zst', onlyIfSuccessful: true, fingerprint: true)
       }
     }
 
