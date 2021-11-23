@@ -14,6 +14,11 @@ makedepends=( 'cmake' 'glm' )
 source=( "maim::git+https://github.com/Accurate0/$_realname.git" )
 md5sums=('SKIP')
 
+pkgver() {
+    cd "$_realname"
+    git describe --long --tags | sed -r 's/([^-]*-g)/r\1/;s/-/./g'
+}
+
 build() {
     cd "$srcdir/$_realname"
     cmake -DCMAKE_INSTALL_PREFIX=/usr ./
