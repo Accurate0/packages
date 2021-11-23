@@ -4,7 +4,7 @@ def packages = [
 ]
 def jobs = [:]
 
-for (package in packges) {
+for (package in packages) {
   jobs["${package}"] = {
     stage("${package}") {
       when { changeset "${package}/*"}
