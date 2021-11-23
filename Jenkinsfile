@@ -13,6 +13,7 @@ pipeline {
     stage('build packages') {
       parallel {
         stage('lemonbar-xft-git') {
+          when { changeset "lemonbar-xft-git/*"}
           agent {
             label 'archlinux-docker'
           }
@@ -27,6 +28,7 @@ pipeline {
         }
 
         stage('maim') {
+          when { changeset "maim/*"}
           agent {
             label 'archlinux-docker'
           }
