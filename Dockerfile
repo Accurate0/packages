@@ -5,5 +5,6 @@ RUN pacman -Syu --noconfirm base-devel wget devtools
 
 ARG user=jenkins
 RUN echo "${user} ALL=(ALL:ALL) NOPASSWD:ALL" >> /etc/sudoers
+RUN usermod -u 0 jenkins
 
 USER ${user}
