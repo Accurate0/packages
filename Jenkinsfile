@@ -6,6 +6,9 @@ pipeline {
   }
   stages {
     stage('lemonbar-xft-git') {
+      node {
+        label 'archlinux-docker'
+      }
       steps {
         catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
           sh '''
@@ -16,6 +19,9 @@ pipeline {
     }
 
     stage('maim') {
+      node {
+        label 'archlinux-docker'
+      }
       steps {
         catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
           sh '''
