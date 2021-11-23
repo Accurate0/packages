@@ -1,7 +1,7 @@
 pipeline {
   agent {
     docker {
-      image 'jenkins/agent:latest-archlinux-jdk11'
+      dockerfile true
     }
 
   }
