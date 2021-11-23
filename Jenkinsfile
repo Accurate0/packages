@@ -1,17 +1,12 @@
 pipeline {
-  agent {
-    docker {
-      dockerfile true
-    }
+  agent { dockerfile true }
 
-  }
   stages {
     stage('build') {
       parallel {
         stage('lemonbar-xft-git') {
           steps {
             sh '''
-            sudo pacman -Syu base-devel --noconfirm
             cd lemonbar-xft-git && makepkg --nosign --syncdeps --noconfirm
             '''
           }
@@ -20,7 +15,6 @@ pipeline {
         stage('maim') {
           steps {
             sh '''
-            sudo pacman -Syu base-devel --noconfirm
             cd maim && makepkg --nosign --syncdeps --noconfirm
             '''
           }
