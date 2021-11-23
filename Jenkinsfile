@@ -10,19 +10,19 @@ pipeline {
       parallel {
         stage('lemonbar-xft-git') {
           steps {
-            dockerNode(image: 'localhost:5000/archbuild') {
-              sh 'echo test'
-            }
-
+            sh '''
+            sudo pacman -Syu base-devel --noconfirm
+            cd lemonbar-xft-git && makepkg --nosign --syncdeps --noconfirm
+            '''
           }
         }
 
         stage('maim') {
           steps {
-            dockerNode(image: 'localhost:5000/archbuild') {
-              sh 'echo test2'
-            }
-
+            sh '''
+            sudo pacman -Syu base-devel --noconfirm
+            cd maim && makepkg --nosign --syncdeps --noconfirm
+            '''
           }
         }
 
