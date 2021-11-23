@@ -1,6 +1,8 @@
 pipeline {
   agent { dockerfile true }
-
+  options {
+    newContainerPerStage()
+  }
   stages {
     stage('build') {
       parallel {
