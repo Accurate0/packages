@@ -1,9 +1,10 @@
 pipeline {
-  agent {
-    node {
-      label 'archlinux-docker'
+    agent {
+      docker {
+        image 'localhost:5000/archbuild'
+        reuseNode false
+      }
     }
-
   }
   stages {
     stage('sync') {
