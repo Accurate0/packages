@@ -6,17 +6,21 @@ pipeline {
       parallel {
         stage('lemonbar-xft-git') {
           steps {
-            sh '''
-            cd lemonbar-xft-git && makepkg --nosign --syncdeps --noconfirm
-            '''
+            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+              sh '''
+              cd lemonbar-xft-git && makepkg --nosign --syncdeps --noconfirm
+              '''
+            }
           }
         }
 
         stage('maim') {
           steps {
-            sh '''
-            cd maim && makepkg --nosign --syncdeps --noconfirm
-            '''
+            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+              sh '''
+              cd maim && makepkg --nosign --syncdeps --noconfirm
+              '''
+            }
           }
         }
 
