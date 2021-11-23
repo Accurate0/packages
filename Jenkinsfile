@@ -2,6 +2,24 @@ def packages = [
   "lemonbar-xft-git",
   "maim",
 ]
+def jobs = [:]
+
+for (package in packges) {
+  jobs["${package}"] = {
+    stage("${package}") {
+      when { changeset "${package}/*"}
+      agent {
+        label 'archlinux-docker'
+      }
+    steps {
+      catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+          sh "cd ${package} && makepkg --nosign --syncdeps --noconfirm"
+        }
+        archiveArtifacts(artifacts: '**/*.pkg.tar.zst', onlyIfSuccessful: true, fingerprint: true)
+      }
+    }
+  }
+}
 
 pipeline {
   agent none
@@ -11,42 +29,16 @@ pipeline {
 
   stages {
     stage('build packages') {
-      parallel {
-        stage('lemonbar-xft-git') {
-          when { changeset "lemonbar-xft-git/*"}
-          agent {
-            label 'archlinux-docker'
-          }
-          steps {
-            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-              sh '''
-              cd lemonbar-xft-git && makepkg --nosign --syncdeps --noconfirm
-              '''
-            }
-            archiveArtifacts(artifacts: '**/*.pkg.tar.zst', onlyIfSuccessful: true, fingerprint: true)
-          }
-        }
-
-        stage('maim') {
-          when { changeset "maim/*"}
-          agent {
-            label 'archlinux-docker'
-          }
-          steps {
-            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-              sh '''
-              cd maim && makepkg --nosign --syncdeps --noconfirm
-              '''
-            }
-            archiveArtifacts(artifacts: '**/*.pkg.tar.zst', onlyIfSuccessful: true, fingerprint: true)
-          }
+      steps {
+        script {
+          parallel jobs
         }
       }
     }
 
     stage('trigger repo update') {
       steps {
-        build job: 'aur-packages/aur-update', parameters: [[$class: 'StringParameterValue', name: 'UPSTREAM_PROJECT', value: '${env.JOB_NAME}/main']]
+        build job: 'aur-packages/aur-update', parameters: [[$class: 'StringParameterValue', name: 'UPSTREAM_PROJECT', value: "${env.JOB_NAME}/main"]]
       }
     }
   }
