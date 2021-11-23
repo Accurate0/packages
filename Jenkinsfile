@@ -1,9 +1,5 @@
 pipeline {
-  agent {
-    dockerfile {
-      args '-u jenkins'
-    }
-  }
+  agent { dockerfile true }
 
   stages {
     stage('build') {
