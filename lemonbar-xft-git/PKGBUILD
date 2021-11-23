@@ -15,7 +15,7 @@ source=("$_pkgname::git+${url}.git")
 sha256sums=('SKIP')
 
 pkgver() {
-    cd "$_pkgname"
+  cd "$_pkgname"
 
 	if git_version=$( git describe --long --tags 2>/dev/null ); then
 		IFS='-' read last_tag tag_rev commit <<< "$git_version"
