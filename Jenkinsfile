@@ -1,5 +1,9 @@
 pipeline {
-  agent { docker 'localhost:5000/archbuild' }
+  agent {
+    node {
+      label 'archlinux-docker'
+    }
+  }
   options {
     newContainerPerStage()
   }
