@@ -1,11 +1,11 @@
 pipeline {
-    agent {
-      docker {
-        image 'localhost:5000/archbuild'
-        reuseNode false
-      }
+  agent {
+    docker {
+      image 'localhost:5000/archbuild'
+      reuseNode false
     }
   }
+
   stages {
     stage('sync') {
       steps {
