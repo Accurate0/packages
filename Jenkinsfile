@@ -22,6 +22,7 @@ pipeline {
               cd lemonbar-xft-git && makepkg --nosign --syncdeps --noconfirm
               '''
             }
+            archiveArtifacts(artifacts: '**/*.pkg.tar.zst', onlyIfSuccessful: true, fingerprint: true)
           }
         }
 
@@ -35,14 +36,9 @@ pipeline {
               cd maim && makepkg --nosign --syncdeps --noconfirm
               '''
             }
+            archiveArtifacts(artifacts: '**/*.pkg.tar.zst', onlyIfSuccessful: true, fingerprint: true)
           }
         }
-      }
-    }
-
-    stage('artifacts') {
-      steps {
-        archiveArtifacts(artifacts: '**/*.pkg.tar.zst', onlyIfSuccessful: true, fingerprint: true)
       }
     }
 
