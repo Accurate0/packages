@@ -1,9 +1,5 @@
 pipeline {
-  agent {
-    dockerfile {
-      args '--user jenkins:jenkins'
-    }
-  }
+  agent { dockerfile true }
   options {
     newContainerPerStage()
   }
