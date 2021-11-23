@@ -11,7 +11,7 @@ pipeline {
   }
   stages {
     script {
-      projects.each { String package ->
+      packages.each { String package ->
         stage(package) {
           steps {
             catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
@@ -51,7 +51,7 @@ pipeline {
 
     stage('trigger repo update') {
       script {
-        projects.each { String package ->
+        packages.each { String package ->
           build job: 'aur-packages/aur-update', parameters: [[$class: 'StringParameterValue', name: 'UPSTREAM_PROJECT', value: package]]
         }
       }
