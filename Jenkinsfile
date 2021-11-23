@@ -10,8 +10,8 @@ pipeline {
   stages {
     stage('build') {
       parallel {
-        stage('lemonbar-xft-git') {
-          node('archlinux-docker') {
+        node('archlinux-docker') {
+          stage('lemonbar-xft-git') {
             steps {
               catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                 sh '''
@@ -22,8 +22,8 @@ pipeline {
           }
         }
 
-        stage('maim') {
-          node('archlinux-docker') {
+        node('archlinux-docker') {
+          stage('maim') {
             steps {
               catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                 sh '''
