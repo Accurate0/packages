@@ -14,7 +14,7 @@ for (int i = 0; i < packages.size(); i++) {
         checkout scm
         catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
           dir("${p}") {
-            sh "ls && makepkg --nosign --syncdeps --noconfirm"
+            sh "makepkg --nosign --syncdeps --noconfirm"
             archiveArtifacts(artifacts: '*.pkg.tar.zst', onlyIfSuccessful: true, fingerprint: true)
           }
         }
