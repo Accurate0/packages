@@ -21,7 +21,6 @@ pipeline {
               stage("${packages[i]}") {
                 node('archlinux-docker') {
                   catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    echo packages
                     echo packages[i]
                     echo i
                     dir(packages[i]) {
