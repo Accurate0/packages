@@ -36,6 +36,21 @@ pipeline {
             archiveArtifacts(artifacts: '**/*.pkg.tar.zst', onlyIfSuccessful: true, fingerprint: true)
           }
         }
+
+        stage('rxvt-unicode-pixbuf-patched') {
+          when { changeset "rxvt-unicode-pixbuf-patched/**/*"}
+          agent {
+            label 'archlinux-docker'
+          }
+          steps {
+            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+              sh '''
+              cd rxvt-unicode-pixbuf-patched && makepkg --nosign --syncdeps --noconfirm
+              '''
+            }
+            archiveArtifacts(artifacts: '**/*.pkg.tar.zst', onlyIfSuccessful: true, fingerprint: true)
+          }
+        }
       }
     }
 
