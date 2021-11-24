@@ -21,6 +21,9 @@ pipeline {
               stage("${packages[i]}") {
                 node('archlinux-docker') {
                   catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                    echo packages
+                    echo packages[i]
+                    echo i
                     dir(packages[i]) {
                       sh "pwd && makepkg --nosign --syncdeps --noconfirm"
                       archiveArtifacts(artifacts: '*.pkg.tar.zst', onlyIfSuccessful: true, fingerprint: true)
