@@ -11,6 +11,7 @@ for (int i = 0; i < packages.size(); i++) {
   jobs["${p}"] = {
     node('archlinux-docker') {
       stage("${p}") {
+        checkout scm
         catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
           dir("${p}") {
             sh "ls && makepkg --nosign --syncdeps --noconfirm"
