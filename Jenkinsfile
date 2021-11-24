@@ -19,15 +19,16 @@ pipeline {
           for (int i = 0; i < packages.size(); i++) {
             jobs["${packages[i]}"] = {
               stage("${packages[i]}") {
-                dockerNode {
-                  label 'archlinux-docker'
-                }
-                steps {
-                  catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                      dir("${packages[i]}") {
-                        sh "makepkg --nosign --syncdeps --noconfirm"
-                        archiveArtifacts(artifacts: '*.pkg.tar.zst', onlyIfSuccessful: true, fingerprint: true)
+                node {
+                  withDockerContainer(image: 'localhost:5000/archbuild'){
+                    steps {
+                      catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                          dir("${packages[i]}") {
+                            sh "makepkg --nosign --syncdeps --noconfirm"
+                            archiveArtifacts(artifacts: '*.pkg.tar.zst', onlyIfSuccessful: true, fingerprint: true)
+                          }
                       }
+                    }
                   }
                 }
               }
