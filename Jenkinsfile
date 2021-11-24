@@ -8,8 +8,6 @@ def jobs = [:]
 
 for (int i = 0; i < packages.size(); i++) {
   jobs["${packages[i]}"] = {
-    echo "${packages[i]}"
-    echo "${i}"
     node('archlinux-docker') {
       stage(${packages[i]}) {
         catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
