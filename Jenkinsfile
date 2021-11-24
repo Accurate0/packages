@@ -6,6 +6,23 @@ def packages = [
 
 def jobs = [:]
 
+for (int i = 0; i < packages.size(); i++) {
+  jobs["${packages[i]}"] = {
+    echo "${packages[i]}"
+    echo "${i}"
+    node('archlinux-docker') {
+      stage(${packages[i]}) {
+        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+          dir(packages[i]) {
+            sh "pwd && makepkg --nosign --syncdeps --noconfirm"
+            archiveArtifacts(artifacts: '*.pkg.tar.zst', onlyIfSuccessful: true, fingerprint: true)
+          }
+        }
+      }
+    }
+  }
+}
+
 pipeline {
   agent none
   options {
@@ -16,22 +33,6 @@ pipeline {
     stage('build packages') {
       steps {
         script {
-          for (int i = 0; i < packages.size(); i++) {
-            jobs["${packages[i]}"] = {
-              echo "${packages[i]}"
-              echo "${i}"
-              node('archlinux-docker') {
-                stage(${packages[i]}) {
-                  catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    dir(packages[i]) {
-                      sh "pwd && makepkg --nosign --syncdeps --noconfirm"
-                      archiveArtifacts(artifacts: '*.pkg.tar.zst', onlyIfSuccessful: true, fingerprint: true)
-                    }
-                  }
-                }
-              }
-            }
-          }
           parallel jobs
         }
       }
