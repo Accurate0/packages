@@ -7,11 +7,12 @@ def packages = [
 def jobs = [:]
 
 for (int i = 0; i < packages.size(); i++) {
-  jobs["${packages[i]}"] = {
+  def p = packages[i]
+  jobs["${p}"] = {
     node('archlinux-docker') {
-      stage(packages[i]) {
+      stage("${p}") {
         catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-          dir(packages[i]) {
+          dir("${p}") {
             sh "pwd && makepkg --nosign --syncdeps --noconfirm"
             archiveArtifacts(artifacts: '*.pkg.tar.zst', onlyIfSuccessful: true, fingerprint: true)
           }
