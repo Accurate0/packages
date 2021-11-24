@@ -13,10 +13,9 @@ pipeline {
           }
           steps {
             catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-              sh '''
-              sudo pacman -Syu --noconfirm
-              cd lemonbar-xft-git && makepkg --nosign --syncdeps --noconfirm
-              '''
+              sh 'sudo pacman -Syu --noconfirm'
+              sh 'cd lemonbar-xft-git'
+              sh 'makepkg --nosign --syncdeps --noconfirm'
             }
             archiveArtifacts(artifacts: '**/*.pkg.tar.zst', onlyIfSuccessful: true, fingerprint: true)
           }
@@ -28,10 +27,9 @@ pipeline {
           }
           steps {
             catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-              sh '''
-              sudo pacman -Syu --noconfirm
-              cd maim && makepkg --nosign --syncdeps --noconfirm
-              '''
+              sh 'sudo pacman -Syu --noconfirm'
+              sh 'cd maim'
+              sh 'makepkg --nosign --syncdeps --noconfirm'
             }
             archiveArtifacts(artifacts: '**/*.pkg.tar.zst', onlyIfSuccessful: true, fingerprint: true)
           }
@@ -43,10 +41,9 @@ pipeline {
           }
           steps {
             catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-              sh '''
-              sudo pacman -Syu --noconfirm
-              cd rxvt-unicode-pixbuf-patched && makepkg --nosign --syncdeps --noconfirm
-              '''
+              sh 'sudo pacman -Syu --noconfirm'
+              sh 'cd rxvt-unicode-pixbuf-patched'
+              sh 'makepkg --nosign --syncdeps --noconfirm'
             }
             archiveArtifacts(artifacts: '**/*.pkg.tar.zst', onlyIfSuccessful: true, fingerprint: true)
           }
