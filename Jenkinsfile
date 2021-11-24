@@ -15,6 +15,7 @@ pipeline {
           steps {
             catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
               sh '''
+              sudo pacman -Syu --noconfirm
               cd lemonbar-xft-git && makepkg --nosign --syncdeps --noconfirm
               '''
             }
@@ -30,6 +31,7 @@ pipeline {
           steps {
             catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
               sh '''
+              sudo pacman -Syu --noconfirm
               cd maim && makepkg --nosign --syncdeps --noconfirm
               '''
             }
@@ -45,6 +47,7 @@ pipeline {
           steps {
             catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
               sh '''
+              sudo pacman -Syu --noconfirm
               cd rxvt-unicode-pixbuf-patched && makepkg --nosign --syncdeps --noconfirm
               '''
             }
