@@ -9,7 +9,7 @@ def jobs = [:]
 for (int i = 0; i < packages.size(); i++) {
   jobs["${packages[i]}"] = {
     node('archlinux-docker') {
-      stage(${packages[i]}) {
+      stage({packages[i]}) {
         catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
           dir(packages[i]) {
             sh "pwd && makepkg --nosign --syncdeps --noconfirm"
