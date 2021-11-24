@@ -13,7 +13,7 @@ for (int i = 0; i < packages.size(); i++) {
       stage("${p}") {
         catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
           dir("${p}") {
-            sh "pwd && makepkg --nosign --syncdeps --noconfirm"
+            sh "ls && makepkg --nosign --syncdeps --noconfirm"
             archiveArtifacts(artifacts: '*.pkg.tar.zst', onlyIfSuccessful: true, fingerprint: true)
           }
         }
