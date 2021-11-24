@@ -20,12 +20,10 @@ pipeline {
             jobs["${packages[i]}"] = {
               stage("${packages[i]}") {
                 node('archlinux-docker') {
-                  steps {
-                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                      dir("${packages[i]}") {
-                        sh "makepkg --nosign --syncdeps --noconfirm"
-                        archiveArtifacts(artifacts: '*.pkg.tar.zst', onlyIfSuccessful: true, fingerprint: true)
-                      }
+                  catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                    dir("${packages[i]}") {
+                      sh "makepkg --nosign --syncdeps --noconfirm"
+                      archiveArtifacts(artifacts: '*.pkg.tar.zst', onlyIfSuccessful: true, fingerprint: true)
                     }
                   }
                 }
