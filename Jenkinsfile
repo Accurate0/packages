@@ -20,8 +20,8 @@ pipeline {
             echo "${packages[i]}"
             echo "${i}"
             jobs["${packages[i]}"] = {
-              stage("${packages[i]}") {
-                node('archlinux-docker') {
+              node('archlinux-docker') {
+                stage(${packages[i]}) {
                   catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                     dir(packages[i]) {
                       sh "pwd && makepkg --nosign --syncdeps --noconfirm"
