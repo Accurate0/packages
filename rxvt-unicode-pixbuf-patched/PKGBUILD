@@ -2,6 +2,7 @@ _pkgname=rxvt-unicode
 pkgname=rxvt-unicode-pixbuf-patched
 pkgver=9.22
 pkgrel=0
+epoch=1
 pkgdesc='Unicode enabled rxvt-clone terminal emulator (urxvt), with pixbuf, fixed font spacing, fixed line spacing, vi-bindings for matcher and fixed opacity.'
 arch=('i686' 'x86_64')
 url='http://software.schmorp.de/pkg/rxvt-unicode.html'
