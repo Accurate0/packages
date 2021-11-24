@@ -17,7 +17,7 @@ pipeline {
       steps {
         script {
           for (int i = 0; i < packages.size(); i++) {
-            echo "${i}"
+            echo "${packages[i]}"
             jobs["${packages[i]}"] = {
               stage("${packages[i]}") {
                 node('archlinux-docker') {
@@ -36,10 +36,10 @@ pipeline {
       }
     }
 
-    stage('repo update') {
-      steps {
-        build job: 'aur-packages/aur-update', parameters: [[$class: 'StringParameterValue', name: 'UPSTREAM_PROJECT', value: "${env.JOB_NAME}"]]
-      }
-    }
+    // stage('repo update') {
+    //   steps {
+    //     build job: 'aur-packages/aur-update', parameters: [[$class: 'StringParameterValue', name: 'UPSTREAM_PROJECT', value: "${env.JOB_NAME}"]]
+    //   }
+    // }
   }
 }
