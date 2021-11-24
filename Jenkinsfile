@@ -1,55 +1,39 @@
+def packages = [
+  "lemonbar-xft-git",
+  "maim",
+  "rxvt-unicode-pixbuf-patched",
+]
+
+def jobs = [:]
+
 pipeline {
   agent none
   options {
     copyArtifactPermission('aur-packages/aur-update');
   }
 
-  stages {
+    stages {
     stage('build packages') {
-      parallel {
-        stage('lemonbar-xft-git') {
-          agent {
-            label 'archlinux-docker'
-          }
-          steps {
-            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-              sh 'sudo pacman -Syu --noconfirm'
-              dir("lemonbar-xft-git") {
-                sh 'makepkg --nosign --syncdeps --noconfirm'
+      steps {
+        script {
+          for (int i = 0; i < packages.size(); i++) {
+            jobs["${packages[i]}"] = {
+              stage("${packages[i]}") {
+                agent {
+                  label 'archlinux-docker'
+                }
+                steps {
+                  catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                      dir("${packages[i]}") {
+                        sh "makepkg --nosign --syncdeps --noconfirm"
+                      }
+                  }
+                  archiveArtifacts(artifacts: '**/*.pkg.tar.zst', onlyIfSuccessful: true, fingerprint: true)
+                }
               }
             }
-            archiveArtifacts(artifacts: '**/*.pkg.tar.zst', onlyIfSuccessful: true, fingerprint: true)
           }
-        }
-
-        stage('maim') {
-          agent {
-            label 'archlinux-docker'
-          }
-          steps {
-            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-              sh 'sudo pacman -Syu --noconfirm'
-              dir("maim") {
-                sh 'makepkg --nosign --syncdeps --noconfirm'
-              }
-            }
-            archiveArtifacts(artifacts: '**/*.pkg.tar.zst', onlyIfSuccessful: true, fingerprint: true)
-          }
-        }
-
-        stage('rxvt-unicode-pixbuf-patched') {
-          agent {
-            label 'archlinux-docker'
-          }
-          steps {
-            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-              sh 'sudo pacman -Syu --noconfirm'
-              dir("rxvt-unicode-pixbuf-patched") {
-                sh 'makepkg --nosign --syncdeps --noconfirm'
-              }
-            }
-            archiveArtifacts(artifacts: '**/*.pkg.tar.zst', onlyIfSuccessful: true, fingerprint: true)
-          }
+          parallel jobs
         }
       }
     }
