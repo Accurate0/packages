@@ -18,6 +18,7 @@ pipeline {
         script {
           for (int i = 0; i < packages.size(); i++) {
             echo "${packages[i]}"
+            echo "${i}"
             jobs["${packages[i]}"] = {
               stage("${packages[i]}") {
                 node('archlinux-docker') {
