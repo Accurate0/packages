@@ -19,7 +19,7 @@ pipeline {
           for (int i = 0; i < packages.size(); i++) {
             jobs["${packages[i]}"] = {
               stage("${packages[i]}") {
-                node {
+                dockerNode {
                   label 'archlinux-docker'
                 }
                 steps {
