@@ -8,12 +8,6 @@ pipeline {
     stage('build packages') {
       parallel {
         stage('lemonbar-xft-git') {
-          when {
-            anyOf {
-              changeset "lemonbar-xft-git/**/*"
-              changeset "Jenkinsfile"
-            }
-          }
           agent {
             label 'archlinux-docker'
           }
@@ -29,12 +23,6 @@ pipeline {
         }
 
         stage('maim') {
-          when {
-            anyOf {
-              changeset "maim/**/*"
-              changeset "Jenkinsfile"
-            }
-          }
           agent {
             label 'archlinux-docker'
           }
@@ -50,12 +38,6 @@ pipeline {
         }
 
         stage('rxvt-unicode-pixbuf-patched') {
-          when {
-            anyOf {
-              changeset "rxvt-unicode-pixbuf-patched/**/*"
-              changeset "Jenkinsfile"
-            }
-          }
           agent {
             label 'archlinux-docker'
           }
