@@ -12,7 +12,7 @@ pipeline {
     copyArtifactPermission('aur-packages/aur-update');
   }
 
-    stages {
+  stages {
     stage('build packages') {
       steps {
         script {
@@ -22,7 +22,7 @@ pipeline {
                 node('archlinux-docker') {
                   catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                     dir("${packages[i]}") {
-                      sh "makepkg --nosign --syncdeps --noconfirm"
+                      sh "pwd && makepkg --nosign --syncdeps --noconfirm"
                       archiveArtifacts(artifacts: '*.pkg.tar.zst', onlyIfSuccessful: true, fingerprint: true)
                     }
                   }
