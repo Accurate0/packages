@@ -26,10 +26,6 @@ for (int i = 0; i < packages.size(); i++) {
 
 pipeline {
   agent none
-  // options {
-    // copyArtifactPermission('aur-packages/aur-update');
-  // }
-
   stages {
     stage('build packages') {
       steps {
@@ -38,11 +34,5 @@ pipeline {
         }
       }
     }
-
-    // stage('repo update') {
-    //   steps {
-    //     build job: 'aur-packages/aur-update', parameters: [[$class: 'StringParameterValue', name: 'UPSTREAM_PROJECT', value: "${env.JOB_NAME}"]]
-    //   }
-    // }
   }
 }
